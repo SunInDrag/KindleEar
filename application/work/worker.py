@@ -151,8 +151,33 @@ def WorkerImpl(userName: str, recipeId: Union[list,str,None]=None, reason='cron'
                 send_to_kindle(user, title, book)
                 lastSendTime = time.time()
                 ret.append(f'Sent "{title}.{bookType}" ({filesizeformat(len(book))})')
-            elif 'local' in delivery_mode:
-                ret.append(f'Saved "{title}"')
+            
+            # 将完整的 EPUB/MOBI 文件保存到服务器上
+            if 'local' in delivery_mode:
+                # 获取保存电子书的目录
+                oebDir = os.environ.get('EBOOK_SAVE_DIR')
+                if oebDir and os.access(oebDir, os.W_OK):
+                    # 创建日期目录
+                    dateDir = os.path.join(oebDir, user.name, user.local_time('%Y-%m-%d'))
+                    os.makedirs(dateDir, exist_ok=True)
+                    
+                    # 生成文件名
+                    sanitized_title = title.replace('/', '_').replace('\\', '_').replace(':', '_')
+                    filename = f"{sanitized_title}_{user.local_time('%H-%M')}.{bookType}"
+                    filepath = os.path.join(dateDir, filename)
+                    
+                    # 保存完整电子书文件
+                    try:
+                        with open(filepath, 'wb') as f:
+                            f.write(book)
+                        # 记录投递日志
+                        save_delivery_log(user, f"{title}.{bookType}", len(book), status='ok', to=filepath)
+                        ret.append(f'Saved "{filename}" ({filesizeformat(len(book))})')
+                    except Exception as e:
+                        log.warning(f'Failed to save ebook file: {filepath}: {e}')
+                        ret.append(f'Failed to save "{title}.{bookType}": {e}')
+                else:
+                    ret.append(f'Saved "{title}" (html only)')
         elif not audio:
             save_delivery_log(user, title, 0, status='nonews')
 
