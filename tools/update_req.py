@@ -13,7 +13,7 @@ def new_secret_key(length=12):
     return ''.join([secrets.choice(allchars) for i in range(length)])
 
 REQ_COMM = [
-    ('requests', '~=2.32.0'),
+    ('requests', '~=2.32.4'),
     ('PySocks', '~=1.7.1'),
     ('chardet', '~=5.2.0'),
     ('pillow', '~=10.4.0'),
@@ -23,18 +23,18 @@ REQ_COMM = [
     ('mailjet-rest', '~=1.3.4'),
     ('python-dateutil', '~=2.9.0'),
     ('css-parser', '~=1.0.10'),
-    ('beautifulsoup4', '~=4.12.3'),
+    ('beautifulsoup4', '~=4.13.5'),
     ('html2text', '~=2024.2.26'),
     ('html5lib', '~=1.1'),
     ('#html5-parser', '~=0.4.0'),
     ('gunicorn', '~=23.0.0'),
-    ('Flask', '~=3.1.0'),
+    ('Flask', '~=3.0.3'),
     ('flask-babel', '~=4.0.0'),
     ('six', '~=1.16.0'),
     ('feedparser', '~=6.0.11'),
     ('qrcode', '~=7.4.2'),
     ('gtts', '~=2.5.4'),
-    ('edge-tts', '~=6.1.18'),
+    ('edge-tts', '~=7.2.2'),
     ('justext', '~=3.0.1'),
 ]
 
